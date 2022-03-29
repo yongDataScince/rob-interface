@@ -1,0 +1,57 @@
+$color-background: #1e2c6e;
+$color-text: #01274f;
+$color-white: #fff;
+$color-shadow: #091042;
+$color-copy: #5873B7;
+$color-loader: #5696e3;
+$color-warning: #E8346F;
+
+$width-content: 36rem;
+$width-forms: 32rem;
+
+$font-regular: 'Nunito', sans-serif;
+
+@import "config/reset.scss";
+@import "config/fonts.scss";
+@import "config/basic.scss";
+@import "config/animate.scss";
+
+html {
+  height: 100%;
+  font: normal 16px/1.5 $font-regular;
+
+  @media screen and (max-width: 479px) {
+    font-size: 14px;
+  }
+}
+
+body {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  position: relative;
+  min-height: 100%;
+  font: inherit;
+
+  color: $color-white;
+  background-color: $color-background;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+
+#root {
+  width: 100%;
+}
+
+@import "layout/header";
+@import "layout/content";
+@import "layout/form";
+@import "layout/field";
+@import "layout/control";
+@import "layout/loader";
+@import "layout/warning";
+@import "layout/message";
+@import "layout/comment";
+@import "layout/action";
+@import "layout/footer";

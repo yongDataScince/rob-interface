@@ -1,0 +1,15 @@
+.control {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  button {
+    display: block;
+    user-select: none;
+
+    @media screen and (max-width: 479px) {
+      width: 100%;
+    }
+  }
+}

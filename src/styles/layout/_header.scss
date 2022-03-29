@@ -1,0 +1,17 @@
+.header {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+
+  margin: 1rem 0;
+
+  h1 {
+    display: block;
+    margin: 0;
+
+    img {
+      width: 12rem;
+      height: 3.25rem;
+    }
+  }
+}

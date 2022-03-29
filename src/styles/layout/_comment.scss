@@ -1,0 +1,12 @@
+.comment {
+  display: none;
+  margin: 0 1rem 0 auto;
+  font-size: 1.125rem;
+  text-align: center;
+
+  color: $color-text;
+
+  .form--loading & {
+    display: block;
+  }
+}

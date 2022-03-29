@@ -1,0 +1,44 @@
+.action {
+  padding: 1rem 3.25rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: inherit;
+  line-height: 1.25;
+
+  color: $color-white;
+  background-size: 200%;
+  background-image: linear-gradient(to right, #36d1dc 0%, #5b86e5 51%, #36d1dc 100%);
+
+  border-radius: 1.875rem;
+  transition: background 0.5s;
+
+  &:hover {
+    background-position: right center;
+  }
+
+  .form--disabled & {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .form--connect & {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .form--blank & {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .form--loading & {
+    pointer-events: none;
+    opacity: 0.5;
+
+    margin-right: 1.5rem;
+  }
+
+  @media screen and (max-width: 479px) {
+    padding: 1rem 2.5rem;
+  }
+}

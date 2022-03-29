@@ -1,0 +1,39 @@
+img {
+  display: block;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+
+  font-size: 1.125rem;
+  font-family: inherit;
+
+  color: inherit;
+  border: solid 2px rgba($color-background, 0.875);
+  border-radius: 0.25rem;
+
+  &::placeholder {
+    color: rgba($color-background, 0.25);
+  }
+
+  &[disabled] {
+    color: rgba($color-text, 0.625);
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+a {
+  text-decoration: none;
+  border-bottom: solid 1px;
+  transition: border 0.25s;
+
+  &:hover {
+    border-bottom-color: transparent;
+  }
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
