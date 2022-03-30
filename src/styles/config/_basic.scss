@@ -23,16 +23,6 @@ input {
   }
 }
 
-a {
-  text-decoration: none;
-  border-bottom: solid 1px;
-  transition: border 0.25s;
-
-  &:hover {
-    border-bottom-color: transparent;
-  }
-}
-
 button {
   cursor: pointer;
   font-family: inherit;

@@ -1,5 +1,9 @@
 import styled, { keyframes } from "styled-components";
 
+interface Props {
+  empty?: boolean
+}
+
 const rotate = keyframes`
   0% {
     transform: rotate(0deg);
@@ -10,7 +14,7 @@ const rotate = keyframes`
   }
 `
 
-export const ContractWrapper = styled.div`
+export const ContractWrapper = styled.div<Props>`
   margin-top: 20px;
   padding: 20px;
   background: #fff;
@@ -23,6 +27,8 @@ export const ContractWrapper = styled.div`
   color: #1e2c6e;
   text-align: center;
   overflow-y: auto;
+  justify-content: ${({ empty }) => empty ? 'center': 'flex-start'};
+
   h4 {
     margin-top: 20px;
     text-align: left;
@@ -99,3 +105,25 @@ export const LoadingItem = styled.div`
   animation: ${rotate} 2s infinite forwards;
 `
 
+export const LoadingTransactionWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+export const LoadingItemLittle = styled(LoadingItem)`
+  width: 20px;
+  height: 20px;
+`
+
+export const LoadingGroup = styled.div`
+  display: flex;
+  align-items: center;
+  button {
+    margin-right: 25px;
+  }
+`
+
+export const MethodGet = styled(Method)`
+  border: none;
+`

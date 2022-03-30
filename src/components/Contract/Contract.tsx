@@ -18,8 +18,9 @@ interface InpOut {
   values?: any
 }
 export const Contract: React.FC<Props> = ({ methods, address, connected, loading, contract }) => {
+  const { account: from, provider } = useMetaMask()
+  const [getTokensLoadig, setGetTokensLoading] = useState<boolean>(false)
 
-  const { account } = useMetaMask()
   const [deposit, setDeposit] = useState<string>('')
   const [inputs, setInputs] = useState(
     methods?.reduce((a, v) => ({...a, [v.name]: {params: [], value: ''} }), {})
@@ -27,24 +28,44 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
 
   const handleClick = async (method: string) => {
     const res = await contract?.methods[method](...(inputs[method]?.params || [])).call()
+
     setInputs({
       ...inputs,
       [method]: {
         ...inputs[method],
-        params: [],
-        value: res
+        value: JSON.stringify(res),
+        params: []
       }
     })
   }
 
   const getTokens = async () => {
-    console.log(await contract?.methods.getTokens(Number(deposit)).call());
+    console.log(from, provider);
+    setGetTokensLoading(true)
+    try {
+      await contract?.methods.getTokens(Number(deposit)).send({ from })
+    } catch (error) {
+      setGetTokensLoading(false)
+    }
+
+    setGetTokensLoading(false)
+  }
+
+  const parseAnswer = (res: any) => {
+    let parsedRes;
+    try {
+      parsedRes = Object.values(JSON.parse(res)).join(", ")
+    } catch (error) {
+      parsedRes = res
+    }
+
+    return parsedRes
   }
 
   if(!connected || !address) {
     return (
-      <Styled.ContractWrapper>
-        <h2>Подключись к Web3 и выбери контракт :)</h2>
+      <Styled.ContractWrapper empty>
+        <h2>Please connect to Web3 and choise contract</h2>
       </Styled.ContractWrapper>
     )
   }
@@ -75,6 +96,7 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
                       {param.name}
                       <Styled.MethodInput
                         placeholder={param.typeName}
+
                         onChange={(e) => {
                           setInputs({
                             ...inputs,
@@ -92,9 +114,9 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
                     </Styled.InputGroup>
                     ))}
                     <Styled.MethodButton onClick={() => handleClick(m.name)}>
-                      Вызов
+                      Call
                     </Styled.MethodButton>
-                    <p>Результат: {inputs[m.name]?.value}</p>
+                    <p>Result: {parseAnswer(inputs[m.name]?.value)}</p>
                   </>
                 )}
                 {m.value}
@@ -103,12 +125,19 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
           ))
         }
 
-      <Styled.Method>
+      <Styled.MethodGet>
         <Styled.MethodInput placeholder='Deposit' onChange={(e) => setDeposit(e.target.value)} />
-        <Styled.MethodButton onClick={getTokens}>
-          Get Tokens
-        </Styled.MethodButton>
-      </Styled.Method>
+        <Styled.LoadingGroup>
+          <Styled.MethodButton onClick={getTokens}>
+            Get Tokens
+          </Styled.MethodButton>
+          {getTokensLoadig && (
+            <Styled.LoadingTransactionWrapper>
+              <Styled.LoadingItemLittle />
+            </Styled.LoadingTransactionWrapper>
+          )}
+        </Styled.LoadingGroup>
+      </Styled.MethodGet>
       </Styled.Methods>
     </Styled.ContractWrapper>
   )

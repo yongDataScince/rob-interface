@@ -9,8 +9,8 @@ export const MainBox = styled.div`
 `
 
 export const Logo = styled.img`
-  width: 110px;
-  height: 40px;
+  width: 130px;
+  height: 60px;
 `
 
 export const Header = styled.header`
@@ -39,5 +39,19 @@ export const Group = styled.div`
   align-items: center;
   button {
     margin-left: 15px;
+  }
+`
+
+export const AddressLink = styled.button`
+  background: none;
+  color: #fff;
+  transition: color .2s;
+
+  &:hover {
+    color: #d0d7ff;
+  }
+
+  &:active {
+    color: #8fa1ff;
   }
 `

@@ -9,6 +9,7 @@ import { Contract as Contr } from 'web3-eth-contract'
 import Web3 from 'web3'
 import { callContract } from './components/methods/callContract'
 import { Contract as ContractType } from "web3-eth-contract";
+import { useEffect } from 'react'
 
 const contractsAddrs = [
   '0x4B3F1B8C1d27A6F1b7A3b39c16C9b780C2bDdAC1',
@@ -26,13 +27,18 @@ const App = () => {
   const [methods, setMethods] = useState<any>([])
   const [contractAddr, setContractAddr] = useState<string>('')
 
+  useEffect(() => {
+    document.title = "CryptoRobotics bridge";
+  }, []);
+
   const loadContract = async (address: string) => {
     console.log('Load Contract...');
     setLoading(true)
     setContractAddr(address)
 
     const web3 = new Web3(config.providers.binance)
-
+    web3.eth.setProvider(Web3.givenProvider);
+    
     const contract: Contr = new web3.eth.Contract((abi as any), address)
     setContract(contract)
 
@@ -54,7 +60,7 @@ const App = () => {
   if (!(window as any).ethereum) {
     return (
       <Template>
-        {!(window as any).ethereum && <a href={config.links.download}>Установи метамаск</a>}
+        {!(window as any).ethereum && <a href={config.links.download}>Please install metamask</a>}
       </Template>
     )
   }
