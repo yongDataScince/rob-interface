@@ -13,9 +13,7 @@ import { useEffect } from 'react'
 
 const contractsAddrs = [
   '0x4B3F1B8C1d27A6F1b7A3b39c16C9b780C2bDdAC1',
-  '0xc288dB2eEfff5126544c2636AAF00732C2FdBF45',
-  '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-  '0x6b4BAd3D7D5d084b8b6CCEdeC2dcA29501195698'
+  '0xc288dB2eEfff5126544c2636AAF00732C2FdBF45'
 ]
 
 const App = () => {
@@ -23,26 +21,32 @@ const App = () => {
   const [contracts, setContracts] = useState<string[]>(contractsAddrs)
   const [contract, setContract] = useState<ContractType>()
   const [loading, setLoading] = useState<boolean>(false)
+  const [netName, setNetName] = useState<string>('')
+  const [web3, setWeb3] = useState<Web3>(new Web3())
 
   const [methods, setMethods] = useState<any>([])
   const [contractAddr, setContractAddr] = useState<string>('')
 
   useEffect(() => {
     document.title = "CryptoRobotics bridge";
-  }, []);
-
-  const loadContract = async (address: string) => {
-    console.log('Load Contract...');
-    setLoading(true)
-    setContractAddr(address)
-
     const web3 = new Web3(config.providers.binance)
     web3.eth.setProvider(Web3.givenProvider);
-    
-    const contract: Contr = new web3.eth.Contract((abi as any), address)
+    setWeb3(web3)
+    web3?.eth.net.getNetworkType().then(setNetName)
+  }, []);
+
+  const loadContract = async (address: string | number) => {
+    console.log('Load Contract...');
+    setLoading(true)
+    setContractAddr(address as string)
+
+    const nn = await web3?.eth.net.getNetworkType()
+    console.log(nn);
+
+    const contract: Contr = new web3.eth.Contract((abi as any), address as string)
     setContract(contract)
 
-    const methodsData = await callContract(contract)
+    const methodsData = await callContract(contract, web3)
     setMethods(methodsData)
     setLoading(false)
   }
@@ -66,7 +70,13 @@ const App = () => {
   }
 
   return (
-    <Template connected={isActive} userAddress={account} connect={connect} disconnect={disconnect}>
+    <Template
+      connected={isActive}
+      userAddress={account}
+      connect={connect}
+      disconnect={disconnect}
+      netName={netName}
+    >
       <DropDown
         disabled={!isActive}
         values={contracts}

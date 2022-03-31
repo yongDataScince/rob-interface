@@ -1,27 +1,36 @@
 import React, { ChangeEvent, useState } from "react";
 import * as Styled from "./styled";
 import { IoIosArrowDown } from 'react-icons/io'
-// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 interface Props {
-  values: string[]
+  values: string | string[]
   value: string
   disabled?: boolean
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void
-  onChoise?: (address: string) => void
   className?: string
+  itemClassName?: string
+  title?: string
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  onChoise?: (address: string | number) => void
 }
 
-export const DropDown: React.FC<Props> = ({ values, value, className, disabled, onChange, onChoise }) => {
+export const DropDown: React.FC<Props> = ({ title, values, value, className, disabled, itemClassName, onChange, onChoise }) => {
   const [opened, setOpened] = useState<boolean>(false)
-  const itemClick = (value: string) => {
+
+  const times = (amount = 1) => new Array(amount).fill(null)
+
+  const itemClick = (value: string | number) => {
     setOpened(!opened)
     onChoise && onChoise(value)
   }
 
   return (
     <Styled.Wrapper className={className}>
-      <Styled.Input disabled={disabled} value={value} onChange={onChange} placeholder='0x000...' />
+      {onChange ? (
+        <Styled.Input disabled={disabled} value={value} onChange={onChange} placeholder='0x000...' />
+      ) : (
+        <Styled.NotInput>{value}</Styled.NotInput>
+      )}
+
       {!disabled && 
         <>
           <Styled.Button onClick={() => setOpened(!opened)} open={opened}>
@@ -31,7 +40,20 @@ export const DropDown: React.FC<Props> = ({ values, value, className, disabled, 
       }
       <Styled.MenuWrapper open={opened}>
         {
-          values.map(addr => <Styled.MenuItem key={addr} onClick={() => itemClick(addr)}>{addr}</Styled.MenuItem>)
+          typeof values === 'string' ? (
+            times(Number(values))
+              .map((_item, index) => (
+                <Styled.MenuItem
+                  className={itemClassName}
+                  key={index}
+                  isNumber
+                  onClick={() => itemClick(Number(index + 1))}>
+                    {index + 1}
+                </Styled.MenuItem>
+              ))
+          ) : (
+            values.map(addr => <Styled.MenuItem className={itemClassName} key={addr} onClick={() => itemClick(addr)}>{addr}</Styled.MenuItem>)
+          )
         }
       </Styled.MenuWrapper>
     </Styled.Wrapper>

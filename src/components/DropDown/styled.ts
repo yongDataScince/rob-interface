@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 
 interface Props {
   open?: boolean
+  isNumber?: boolean
 }
 
 export const Wrapper = styled.div`
@@ -11,6 +12,7 @@ export const Wrapper = styled.div`
   background: #FFFFFF;
   width: 50vw;
   margin-top: 50px;
+  display: flex;
 `
 
 export const Input = styled.input`
@@ -30,6 +32,18 @@ export const Input = styled.input`
     opacity: 0.4;
     cursor: not-allowed;
   }
+`
+
+export const NotInput = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 2px;
+  border: 2px solid #1e2c6e;
+  color: #1e2c6e;
+  font-size: 18px;
+  border-radius: 4px;
+  padding-left: 5px;
+  text-align: left;
 `
 
 export const Button = styled.button<Props>`
@@ -69,13 +83,13 @@ export const MenuWrapper = styled.div<Props>`
   `}
 `
 
-export const MenuItem = styled.div`
-  width: 100%;
+export const MenuItem = styled.div<Props>`
   padding: 5px;
   font-size: 14px;
   transition: .2s;
   color: #1e2c6e;
   border-bottom: 1px solid #2d3f9983;
+  text-align: ${({ isNumber }) => isNumber ? 'left' : 'center'};
   &:last-child {
     border-bottom: none;
   }

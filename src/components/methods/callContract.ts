@@ -1,45 +1,34 @@
 import { Contract } from "web3-eth-contract";
-import abi from 'src/abi/abi.json'
+import tokenAbi from 'src/abi/token.json'
+import Web3 from "web3";
 
-export const callContract = async (contract: Contract) => {
+const describes: any = {
+  tokenName: 'Название токена',
+  tokenContract: 'Контракт токена',
+  totalSteps: 'Общее количество этапов',
+  dayToNextStep: 'Дней до следующего этапа',
+  valueOfTokens: 'Количество токенов на депозите',
+  valueOfTokensWithdraw: 'Количество доступных токенов к получению',
+  currentStep: 'Текущий этап'
+}
+
+export const callContract = async (contract: Contract, web3: Web3) => {
+  const tokenAddress = await contract.methods.token().call()
+  const tokenContract = new web3.eth.Contract((tokenAbi as any), tokenAddress)
   if(contract) {
-    const viewNoArgsMethods = await Promise.all(Object.keys(contract.methods)
-    .filter((name) => !name.includes('()'))
-    .filter((name) => !name.includes('0x'))
-    .map(async (name) => {
-      return abi
-        .filter((obj) => name.includes(obj.name || ''))
-        .filter((obj) => obj.stateMutability === 'view')
-        .filter((obj) => !obj.inputs.length)
-        .map(async (obj) => {
-          return {
-            name: obj.name,
-            value: await contract.methods[name]().call(),
-            returns:
-              obj.outputs?.map(outs => ({ typeName: outs.type, name: outs.name }))
-          }
-        })?.[0]
-    }))
-
-    const viewArgsMethods = Object.keys(contract.methods)
-      .filter((name) => !name.includes('(') && !name.includes(')') )
-      .map((name) => {
-        return abi
-          .filter((obj) => name.includes(obj.name || ''))
-          .filter((obj) => obj.stateMutability === 'view')
-          .filter((obj) => obj.inputs.length)
-          .map((obj) => ({
-            name: obj.name,
-            params:
-              obj.inputs.map(inps => ({ typeName: inps.type, name: inps.name })),
-            returns: 
-              obj.outputs?.map(outs => ({ typeName: outs.type, name: outs.name }))
-          }))?.[0]
-      })
-
     return [
-      ...viewArgsMethods,
-      ...viewNoArgsMethods
+      {
+        describe: describes.tokenName,
+        value: await tokenContract.methods.symbol().call()
+      },
+      {
+        describe: describes.tokenContract,
+        value: tokenAddress
+      },
+      {
+        describe: describes.totalSteps,
+        value: await contract.methods.numberOfSteps().call()
+      },
     ].filter(Boolean)
   }
   return []

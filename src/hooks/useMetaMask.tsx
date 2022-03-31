@@ -19,6 +19,9 @@ export const injected = new InjectedConnector({ supportedChainIds: [1, 3, 97] })
 export const MetaMaskProvider: React.FC = ({ children }) => {
   const { activate, account, library, connector, active, deactivate } = useWeb3React()
 
+  console.log(injected.eventNames());
+  
+
   const [isActive, setIsActive] = useState(false)
   const [shouldDisable, setShouldDisable] = useState(false) // Should disable connect button while connecting to MetaMask
   const [isLoading, setIsLoading] = useState(true)

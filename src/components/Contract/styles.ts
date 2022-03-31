@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import DropDown from "../DropDown";
 
 interface Props {
   empty?: boolean
@@ -47,7 +48,7 @@ export const Method = styled.div`
   flex-direction: column;
   border-radius: 5px;
   border: 1px solid #1e2b6e20;
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
   margin-bottom: 5px;
 `
@@ -61,6 +62,7 @@ export const MethodBody = styled.div`
   background: #FFFF;
   text-align: left;
   padding: 5px;
+
 `
 
 export const InputGroup = styled.div`
@@ -116,6 +118,11 @@ export const LoadingItemLittle = styled(LoadingItem)`
   height: 20px;
 `
 
+export const DropGroup = styled.div`
+  display: flex;
+  align-items: center;
+`
+
 export const LoadingGroup = styled.div`
   display: flex;
   align-items: center;
@@ -124,6 +131,22 @@ export const LoadingGroup = styled.div`
   }
 `
 
+export const CustomDrop = styled(DropDown)`
+  max-width: 100px;
+  padding: 0;
+  margin: 0;
+  .number-item {
+    height: 27px;
+  }
+  button {
+    right: 2px;
+  }
+`
+
 export const MethodGet = styled(Method)`
   border: none;
+`
+
+export const Message = styled.p`
+  font-size: 14px;
 `

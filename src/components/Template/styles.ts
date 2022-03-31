@@ -8,6 +8,13 @@ export const MainBox = styled.div`
   align-items: center;
 `
 
+export const NetWork = styled.div`
+  padding: 3px 8px;
+  background: #fff;
+  color: #1e2c6e;
+  border-radius: 10px;
+`
+
 export const Logo = styled.img`
   width: 130px;
   height: 60px;
