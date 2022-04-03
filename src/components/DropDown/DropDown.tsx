@@ -8,12 +8,13 @@ interface Props {
   disabled?: boolean
   className?: string
   itemClassName?: string
-  title?: string
+  isShortAddr?: boolean
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
   onChoise?: (address: string | number) => void
+  onKeyPress?: (address: string | number) => void
 }
 
-export const DropDown: React.FC<Props> = ({ title, values, value, className, disabled, itemClassName, onChange, onChoise }) => {
+export const DropDown: React.FC<Props> = ({ values, value, isShortAddr, className, disabled, itemClassName, onChange, onChoise, onKeyPress }) => {
   const [opened, setOpened] = useState<boolean>(false)
 
   const times = (amount = 1) => new Array(amount).fill(null)
@@ -24,9 +25,16 @@ export const DropDown: React.FC<Props> = ({ title, values, value, className, dis
   }
 
   return (
-    <Styled.Wrapper className={className}>
+    <Styled.Wrapper className={className} hasError={isShortAddr}>
       {onChange ? (
-        <Styled.Input disabled={disabled} value={value} onChange={onChange} placeholder='0x000...' />
+        <Styled.Input
+          isShortAddr={isShortAddr}
+          disabled={disabled}
+          value={value}
+          onChange={onChange}
+          placeholder='0x000...'
+          onKeyPress={(e) => e.key === 'Enter' && onKeyPress && onKeyPress(value)}
+        />
       ) : (
         <Styled.NotInput>{value}</Styled.NotInput>
       )}

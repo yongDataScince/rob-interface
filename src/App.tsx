@@ -18,11 +18,12 @@ const contractsAddrs = [
 
 const App = () => {
   const { connect, disconnect, isActive, account } = useMetaMask()
-  const [contracts, setContracts] = useState<string[]>(contractsAddrs)
+  const [contracts,] = useState<string[]>(contractsAddrs)
   const [contract, setContract] = useState<ContractType>()
   const [loading, setLoading] = useState<boolean>(false)
   const [netName, setNetName] = useState<string>('')
   const [web3, setWeb3] = useState<Web3>(new Web3())
+  const [isShortAddr, setIsShortAddr] = useState<boolean>(false)
 
   const [methods, setMethods] = useState<any>([])
   const [contractAddr, setContractAddr] = useState<string>('')
@@ -35,7 +36,12 @@ const App = () => {
     web3?.eth.net.getNetworkType().then(setNetName)
   }, []);
 
-  const loadContract = async (address: string | number) => {
+  const loadContract = async (address: unknown) => {
+    if ((address as string).length < 20) {
+      setIsShortAddr(true)
+      return
+    }
+    setIsShortAddr(false)
     console.log('Load Contract...');
     setLoading(true)
     setContractAddr(address as string)
@@ -52,12 +58,7 @@ const App = () => {
   }
 
   const changeAddr = (e: string) => {
-    if (!e) {
-      console.log('empty');
-      setContracts(contractsAddrs)
-    }
     setContractAddr(e)
-    setContracts(contracts.filter(c => c.toLowerCase().includes(e.toLowerCase())))
   }
 
 
@@ -78,11 +79,13 @@ const App = () => {
       netName={netName}
     >
       <DropDown
+        isShortAddr={isShortAddr}
         disabled={!isActive}
         values={contracts}
         value={contractAddr}
         onChange={(e) => changeAddr(e.target.value)}
         onChoise={loadContract}
+        onKeyPress={loadContract}
       />
       <Contract
         loading={loading}

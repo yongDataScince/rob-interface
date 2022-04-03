@@ -3,9 +3,11 @@ import styled, { css } from 'styled-components'
 interface Props {
   open?: boolean
   isNumber?: boolean
+  isShortAddr?: boolean
+  hasError?: boolean
 }
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<Props>`
   position: relative;
   padding: 7px;
   border-radius: 10px;
@@ -13,15 +15,19 @@ export const Wrapper = styled.div`
   width: 50vw;
   margin-top: 50px;
   display: flex;
+  transition: .2s;
+
 `
 
-export const Input = styled.input`
+export const Input = styled.input<Props>`
   width: 100%;
   height: 100%;
   padding: 2px;
   border: 2px solid #1e2c6e;
   color: #1e2c6e;
   font-size: 18px;
+  transition: .2s;
+  border-color: ${({ isShortAddr }) => isShortAddr ? '#E8346F' : '#1e2c6e'};
   &::placeholder {
     color: #2d3f9983;
   }

@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const Contract: React.FC<Props> = ({ methods, address, connected, loading, contract }) => {
-  const { account: from, provider } = useMetaMask()
+  const { account: from } = useMetaMask()
 
   // info
   const [numberOfDeposits, setNumberOfDeposits] = useState<unknown>('0')
@@ -23,6 +23,7 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [tokensOnDeposit, setTokensOnDeposit] = useState<number>(0)
   const [tokensToWithdraw, setTokensToWithdraw] = useState<number>(0)
+  const [lostTime, setLostTime] = useState<string>('')
 
   // methods vars
   const [getTokensLoading, setGetTokensLoading] = useState<boolean>(false)
@@ -47,16 +48,37 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
     contract?.methods?.getCurrentStep(from, activeDeposit)
       .call()
         .then((data: number) => setCurrentStep(data))
-  }, [contract, from, activeDeposit])
+    
+    contract?.methods.RELEASE_STEP()
+      .call()
+        .then((data: number) => {
+          const timeDiv = (data * 6) - (data * currentStep)
+          const minutes = timeDiv / 60
+          const hours = minutes / 60
+          const days = hours / 24
+
+          if(timeDiv < 60) {
+            setLostTime(`${timeDiv}c.`)
+          }
+          else if (timeDiv >= 60 && minutes < 60) {
+            setLostTime(`${minutes}м.`)
+          }
+          else if (minutes >= 60 && hours < 24) {
+            setLostTime(`${hours}ч.`)
+          }
+          else {
+            setLostTime(`${days}дн.`)
+          }
+        })
+  }, [contract, from, activeDeposit, currentStep])
 
   const getTokens = async () => {
-    console.log(from, provider);
     setGetTokensLoading(true)
     setMessage('')
     setClicked(true)
     try {
       await contract?.methods.getTokens(Number(activeDeposit)).send({ from })
-      setMessage(`Ваши токены были успешно отправлены на кошелек <a>${from}</a>`)
+      setMessage(`Ваши токены были успешно отправлены на кошелек ${from}`)
       setGetTokensLoading(false)
     } catch (error) {
       setGetTokensLoading(false)
@@ -65,7 +87,7 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
     }
   }
 
-  if(!connected || !address) {
+  if(!connected || !address || address.length < 20) {
     return (
       <Styled.ContractWrapper empty>
         <h2>Подключи кошелек и выбери нужный контракт</h2>
@@ -110,8 +132,20 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
         }
         <Styled.Method>
           <Styled.MethodName>Текущий этап</Styled.MethodName>
-          <Styled.MethodBody>{currentStep}</Styled.MethodBody>
+          <Styled.MethodBody>
+            {Number(currentStep) === 6 ? 'Вы на последнем этапе' : currentStep}
+          </Styled.MethodBody>
         </Styled.Method>
+        <Styled.Method>
+          <Styled.MethodName>Общее количество этапов</Styled.MethodName>
+          <Styled.MethodBody>6</Styled.MethodBody>
+        </Styled.Method>
+        {currentStep < 6 && (
+          <Styled.Method>
+            <Styled.MethodName>Дней до следующего этапа</Styled.MethodName>
+            <Styled.MethodBody>{lostTime}</Styled.MethodBody>
+          </Styled.Method>
+        )}
         <Styled.Method>
           <Styled.MethodName>Количество токенов на депозите</Styled.MethodName>
           <Styled.MethodBody>{tokensOnDeposit}</Styled.MethodBody>
