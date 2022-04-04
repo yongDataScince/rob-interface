@@ -30,9 +30,20 @@ export const ContractWrapper = styled.div<Props>`
   overflow-y: auto;
   justify-content: ${({ empty }) => empty ? 'center': 'flex-start'};
 
+  h3 {
+    font-size: 16px;
+  }
+
   h4 {
     margin-top: 20px;
     text-align: left;
+  }
+
+  @media (max-width: 769px) {
+    width: 90vw;
+    h3 {
+      font-size: 12px;
+    }
   }
 `
 
@@ -57,12 +68,17 @@ export const MethodName = styled.div`
   background: #1e2b6e20;
   text-align: left;
   padding: 5px;
+  @media (max-width: 769px) {
+    font-size: 12px;
+  }
 `
 export const MethodBody = styled.div`
   background: #FFFF;
   text-align: left;
   padding: 5px;
-
+  @media (max-width: 769px) {
+    font-size: 12px;
+  }
 `
 
 export const InputGroup = styled.div`

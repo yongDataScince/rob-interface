@@ -18,6 +18,10 @@ export const NetWork = styled.div`
 export const Logo = styled.img`
   width: 130px;
   height: 60px;
+  @media (max-width: 769px) {
+    width: 80px;
+    height: 40px;
+  }
 `
 
 export const Header = styled.header`
@@ -38,6 +42,10 @@ export const MetaButton = styled.button`
   &:active {
     color: #1e2c6e;
     background: #FFFFFF;
+  }
+  @media (max-width: 769px) {
+    padding: 5px;
+    font-size: 10px;
   }
 `
 
@@ -60,5 +68,9 @@ export const AddressLink = styled.button`
 
   &:active {
     color: #8fa1ff;
+  }
+
+  @media (max-width: 769px) {
+    display: none;
   }
 `

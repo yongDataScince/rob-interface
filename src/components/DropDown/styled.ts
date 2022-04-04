@@ -16,7 +16,10 @@ export const Wrapper = styled.div<Props>`
   margin-top: 50px;
   display: flex;
   transition: .2s;
-
+  @media (max-width: 769px) {
+    width: 90vw;
+    margin-top: 20px;
+  }
 `
 
 export const Input = styled.input<Props>`
@@ -37,6 +40,9 @@ export const Input = styled.input<Props>`
   &:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+  }
+  @media (max-width: 769px) {
+    font-size: 12px;
   }
 `
 

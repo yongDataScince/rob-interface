@@ -87,6 +87,10 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
     }
   }
 
+  const copyAddress = () => {
+    navigator.clipboard.writeText(methods?.[1].value || '')
+  }
+
   if(!connected || !address || address.length < 20) {
     return (
       <Styled.ContractWrapper empty>
@@ -142,7 +146,7 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
         </Styled.Method>
         {currentStep < 6 && (
           <Styled.Method>
-            <Styled.MethodName>Дней до следующего этапа</Styled.MethodName>
+            <Styled.MethodName>До следующего этапа</Styled.MethodName>
             <Styled.MethodBody>{lostTime}</Styled.MethodBody>
           </Styled.Method>
         )}
