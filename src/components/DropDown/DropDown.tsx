@@ -42,7 +42,9 @@ export const DropDown: React.FC<Props> = ({ values, value, isShortAddr, classNam
       {!disabled && 
         <>
           <Styled.Button onClick={() => setOpened(!opened)} open={opened}>
-            <IoIosArrowDown size={20} color='#1e2c6e' />
+            {
+              values.length > 1 && <IoIosArrowDown size={20} color='#1e2c6e' />
+            }
           </Styled.Button>
         </>
       }

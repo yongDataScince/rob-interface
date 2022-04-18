@@ -61,7 +61,7 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
             setLostTime(`${timeDiv}c.`)
           }
           else if (timeDiv >= 60 && minutes < 60) {
-            setLostTime(`${minutes}м.`)
+            setLostTime(`${minutes} мин`)
           }
           else if (minutes >= 60 && hours < 24) {
             setLostTime(`${hours}ч.`)
@@ -137,7 +137,7 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
         <Styled.Method>
           <Styled.MethodName>Текущий этап</Styled.MethodName>
           <Styled.MethodBody>
-            {Number(currentStep) === 6 ? 'Вы на последнем этапе' : currentStep}
+            {Number(currentStep) === 6 ? 'Все этапы завершены' : currentStep}
           </Styled.MethodBody>
         </Styled.Method>
         <Styled.Method>

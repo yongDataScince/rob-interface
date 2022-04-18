@@ -8,8 +8,9 @@ import Contract from './components/Contract'
 import { Contract as Contr } from 'web3-eth-contract'
 import Web3 from 'web3'
 import { callContract } from './components/methods/callContract'
-import { Contract as ContractType } from "web3-eth-contract";
+import { Contract as ContractType } from 'web3-eth-contract'
 import { useEffect } from 'react'
+import * as Styled from './app-styles'
 
 const contractsAddrs = [
   '0x4B3F1B8C1d27A6F1b7A3b39c16C9b780C2bDdAC1',
@@ -94,6 +95,9 @@ const App = () => {
         connected={isActive}
         contract={contract}
       />
+      <Styled.Footer>
+        © Cryptorobotics. All rights reserved
+      </Styled.Footer>
     </Template>
   )
 }
