@@ -7,29 +7,30 @@ export interface ContextType {
   isActive: boolean
   account: string | null | undefined
   isLoading: boolean
+  mustChangeChain: boolean
+  provider: any
   connect: () => Promise<void>
   disconnect: () => Promise<void>
-  provider: any
 }
+
+export const SUPPORT_CHAINS = [56];
 
 export const MataMaskContext = React.createContext<ContextType | null>(null)
 
-export const injected = new InjectedConnector({ supportedChainIds: [1, 3, 97] })
+export const injected = new InjectedConnector({ supportedChainIds: SUPPORT_CHAINS })
 
 export const MetaMaskProvider: React.FC = ({ children }) => {
   const { activate, account, library, connector, active, deactivate } = useWeb3React()
 
-  console.log(injected.eventNames());
-  
-
   const [isActive, setIsActive] = useState(false)
+  const [mustChangeChain, setMustChangeChain] = useState(false)
+
   const [shouldDisable, setShouldDisable] = useState(false) // Should disable connect button while connecting to MetaMask
   const [isLoading, setIsLoading] = useState(true)
   const [provider, setProvider] = useState<string>()
 
   // Check when App is Connected or Disconnected to MetaMask
   const handleIsActive = useCallback(() => {
-      console.log('App is connected with MetaMask ', active)
       setIsActive(active)
   }, [active])
 
@@ -39,8 +40,14 @@ export const MetaMaskProvider: React.FC = ({ children }) => {
 
   // Connect to MetaMask wallet
   const connect = async () => {
-      console.log('Connecting to MetaMask...')
+      const chainId = Number(await injected.getChainId())
+      if (!SUPPORT_CHAINS.includes(chainId)) {
+          setMustChangeChain(true)
+          return
+      }
+      
       setShouldDisable(true)
+      setMustChangeChain(false)
       try {
           await activate(injected).then((val) => {
               setShouldDisable(false)
@@ -52,7 +59,6 @@ export const MetaMaskProvider: React.FC = ({ children }) => {
 
   // Disconnect from Metamask wallet
   const disconnect = async () => {
-      console.log('Disconnecting wallet from App...')
       try {
           await deactivate()
       } catch(error) {
@@ -68,9 +74,10 @@ export const MetaMaskProvider: React.FC = ({ children }) => {
           connect,
           disconnect,
           shouldDisable,
-          provider
+          provider,
+          mustChangeChain
       }),
-      [isActive, isLoading, shouldDisable, account, provider]
+      [isActive, isLoading, shouldDisable, account, provider, mustChangeChain]
   )
 
   return <MataMaskContext.Provider value={values}>{children}</MataMaskContext.Provider>

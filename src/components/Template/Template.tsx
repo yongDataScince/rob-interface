@@ -6,12 +6,11 @@ import { FaCopy } from "react-icons/fa";
 interface Props {
   connected?: boolean
   userAddress?: string | null
-  netName?: string
   connect?: () => void
   disconnect?: () => void
 }
 
-export const Template: React.FC<Props> = ({ children, connected, userAddress, netName, connect, disconnect }) => {
+export const Template: React.FC<Props> = ({ children, connected, userAddress, connect, disconnect }) => {
   const copyAddress = () => {
     navigator.clipboard.writeText(userAddress || '')
   }
@@ -27,7 +26,6 @@ export const Template: React.FC<Props> = ({ children, connected, userAddress, ne
             Connect to Web3
           </Styled.MetaButton> : (
             <Styled.Group>
-              {netName !== 'main' && <Styled.NetWork>{netName}</Styled.NetWork>}
               <Styled.AddressLink onClick={copyAddress}>
                 {userAddress} <FaCopy />
               </Styled.AddressLink>

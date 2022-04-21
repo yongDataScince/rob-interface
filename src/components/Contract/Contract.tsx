@@ -11,25 +11,25 @@ interface Props {
   connected: boolean
   loading?: boolean
   contract?: ContractType
+  mustChangeChain?: boolean
 }
 
-export const Contract: React.FC<Props> = ({ methods, address, connected, loading, contract }) => {
+export const Contract: React.FC<Props> = ({ methods, address, connected, loading, contract, mustChangeChain }) => {
   const { account: from } = useMetaMask()
 
   // info
   const [numberOfDeposits, setNumberOfDeposits] = useState<unknown>('0')
   const [activeDeposit, setActiveDeposit] = useState<unknown>(1)
 
-  const [currentStep, setCurrentStep] = useState<number>(1)
-  const [tokensOnDeposit, setTokensOnDeposit] = useState<number>(0)
-  const [tokensToWithdraw, setTokensToWithdraw] = useState<number>(0)
+  const [currentStep, setCurrentStep] = useState<string>('1')
+  const [tokensOnDeposit, setTokensOnDeposit] = useState<string>('0')
+  const [tokensToWithdraw, setTokensToWithdraw] = useState<string>('0')
   const [lostTime, setLostTime] = useState<string>('')
 
   // methods vars
   const [getTokensLoading, setGetTokensLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
   const [clicked, setClicked] = useState<boolean>(false)
-
 
   useEffect(() => {
     contract?.methods?.getNumberOfDeposits(from)
@@ -38,21 +38,23 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
 
     contract?.methods?.getPayment(activeDeposit)
       .call()
-        .then((data: number) => setTokensOnDeposit(data))
-        .catch(() => setTokensOnDeposit(0))
+        .then(() => console.log('Done'))
+        .catch(() => setTokensOnDeposit('Вы не внесли депозит на данном этапе'))
 
     contract?.methods?.getUser(from, activeDeposit)
       .call()
-        .then((data: number[]) => setTokensToWithdraw(data[1] / 10e18))
+        .then((data: number[]) => setTokensToWithdraw((data[1] / 10e18).toString()))
+        .catch(() => setTokensToWithdraw('Вы не внесли депозит на данном этапе'))
     
     contract?.methods?.getCurrentStep(from, activeDeposit)
       .call()
-        .then((data: number) => setCurrentStep(data))
+        .then((data: number) => setCurrentStep(data.toString()))
+        .catch(() => setCurrentStep('Вы не внесли депозит на данном этапе'))
     
     contract?.methods.RELEASE_STEP()
       .call()
         .then((data: number) => {
-          const timeDiv = (data * 6) - (data * currentStep)
+          const timeDiv = (data * 6) - (data * Number(currentStep))
           const minutes = timeDiv / 60
           const hours = minutes / 60
           const days = hours / 24
@@ -83,12 +85,17 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
     } catch (error) {
       setGetTokensLoading(false)
       setMessage(`Ваши токены не были отправлены на кошелек тк у вас не достаточно средств`)
-      console.log(error);
     }
   }
 
-  const copyAddress = () => {
-    navigator.clipboard.writeText(methods?.[1].value || '')
+  if (mustChangeChain) {
+    return (
+      <Styled.ContractWrapper empty>
+        <h2>
+          <a href="https://academy.binance.com/en/articles/connecting-metamask-to-binance-smart-chain">Измени</a> сеть на основную binance
+        </h2>
+      </Styled.ContractWrapper>
+    )
   }
 
   if(!connected || !address || address.length < 20) {
@@ -140,11 +147,7 @@ export const Contract: React.FC<Props> = ({ methods, address, connected, loading
             {Number(currentStep) === 6 ? 'Все этапы завершены' : currentStep}
           </Styled.MethodBody>
         </Styled.Method>
-        <Styled.Method>
-          <Styled.MethodName>Общее количество этапов</Styled.MethodName>
-          <Styled.MethodBody>6</Styled.MethodBody>
-        </Styled.Method>
-        {currentStep < 6 && (
+        {Number(currentStep) < 6 && (
           <Styled.Method>
             <Styled.MethodName>До следующего этапа</Styled.MethodName>
             <Styled.MethodBody>{lostTime}</Styled.MethodBody>

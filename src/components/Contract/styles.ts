@@ -3,6 +3,7 @@ import DropDown from "../DropDown";
 
 interface Props {
   empty?: boolean
+  forDrop?: boolean
 }
 
 const rotate = keyframes`
@@ -72,10 +73,21 @@ export const MethodName = styled.div`
     font-size: 12px;
   }
 `
-export const MethodBody = styled.div`
+export const MethodBody = styled.div<Props>`
   background: #FFFF;
   text-align: left;
   padding: 5px;
+  position: relative;
+  overflow: ${({ forDrop }) => forDrop ? 'visible' : 'hidden'};
+  &::before {
+    position: absolute;
+    content: '';
+    width: 35px;
+    height: 100%;
+    right: 0;
+    top: 0;
+    background: linear-gradient(90deg, transparent, #FFF);
+  }
   @media (max-width: 769px) {
     font-size: 12px;
   }
