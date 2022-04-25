@@ -22,7 +22,7 @@ export const ContractWrapper = styled.div<Props>`
   background: #fff;
   border-radius: 15px;
   width: 50vw;
-  min-height: 70vh;
+  min-height: 75vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 1px 5px 4px rgba(50,50,50,0.33);
@@ -113,8 +113,15 @@ export const MethodButton = styled.button`
   color: #FFFFFF;
   border-radius: 5px;
   max-width: 100px;
+  margin-top: auto;
   &:active {
     background: #01274f;
+  }
+`
+
+export const Link = styled.a`
+  &:visited {
+    color: #1e2c6e;
   }
 `
 
@@ -177,4 +184,7 @@ export const MethodGet = styled(Method)`
 
 export const Message = styled.p`
   font-size: 14px;
+`
+export const Error = styled.p`
+  color: #E8346F;
 `

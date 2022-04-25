@@ -9,6 +9,7 @@ export interface ContextType {
   isLoading: boolean
   mustChangeChain: boolean
   provider: any
+  setIsActive: (isActive: boolean) => void
   connect: () => Promise<void>
   disconnect: () => Promise<void>
 }
@@ -20,7 +21,7 @@ export const MataMaskContext = React.createContext<ContextType | null>(null)
 export const injected = new InjectedConnector({ supportedChainIds: SUPPORT_CHAINS })
 
 export const MetaMaskProvider: React.FC = ({ children }) => {
-  const { activate, account, library, connector, active, deactivate } = useWeb3React()
+  const { activate, account, active, deactivate } = useWeb3React()
 
   const [isActive, setIsActive] = useState(false)
   const [mustChangeChain, setMustChangeChain] = useState(false)
@@ -73,6 +74,7 @@ export const MetaMaskProvider: React.FC = ({ children }) => {
           isLoading,
           connect,
           disconnect,
+          setIsActive,
           shouldDisable,
           provider,
           mustChangeChain

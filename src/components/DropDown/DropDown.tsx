@@ -1,9 +1,10 @@
 import React, { ChangeEvent, useState } from "react";
 import * as Styled from "./styled";
 import { IoIosArrowDown } from 'react-icons/io'
+import { ContractItem } from "src/App";
 
 interface Props {
-  values: string | string[]
+  values: string | ContractItem[]
   value: string
   disabled?: boolean
   className?: string
@@ -14,7 +15,17 @@ interface Props {
   onKeyPress?: (address: string | number) => void
 }
 
-export const DropDown: React.FC<Props> = ({ values, value, isShortAddr, className, disabled, itemClassName, onChange, onChoise, onKeyPress }) => {
+export const DropDown: React.FC<Props> = ({
+    values,
+    value, 
+    isShortAddr, 
+    className, 
+    disabled, 
+    itemClassName, 
+    onChange, 
+    onChoise, 
+    onKeyPress 
+  }) => {
   const [opened, setOpened] = useState<boolean>(false)
 
   const times = (amount = 1) => new Array(amount).fill(null)
@@ -62,7 +73,15 @@ export const DropDown: React.FC<Props> = ({ values, value, isShortAddr, classNam
                 </Styled.MenuItem>
               ))
           ) : (
-            values.map(addr => <Styled.MenuItem className={itemClassName} key={addr} onClick={() => itemClick(addr)}>{addr}</Styled.MenuItem>)
+            values.map(addr => (
+              <Styled.MenuItem
+                className={itemClassName}
+                key={addr.address}
+                onClick={() => itemClick(addr.address)}
+              >
+                {addr.address.slice(0, 7)}...{addr.address.slice(38, 42)}: {addr.name}
+              </Styled.MenuItem>
+            ))
           )
         }
       </Styled.MenuWrapper>

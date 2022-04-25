@@ -18,6 +18,7 @@ export const NetWork = styled.div`
 export const Logo = styled.img`
   width: 130px;
   height: 60px;
+  margin: 0 30px;
   @media (max-width: 769px) {
     width: 80px;
     height: 40px;
@@ -29,7 +30,7 @@ export const Header = styled.header`
   padding: 10px 15px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 `
 
 export const MetaButton = styled.button`
@@ -39,9 +40,13 @@ export const MetaButton = styled.button`
   color: #fff;
   border: 2px solid #fff;
   transition: .1s;
+
   &:active {
     color: #1e2c6e;
     background: #FFFFFF;
+  }
+  &:last-child {
+    margin-left: auto;
   }
   @media (max-width: 769px) {
     padding: 5px;
@@ -52,6 +57,7 @@ export const MetaButton = styled.button`
 export const Group = styled.div`
   display: flex;
   align-items: center;
+  margin-left: auto;
   button {
     margin-left: 15px;
   }
@@ -61,7 +67,7 @@ export const AddressLink = styled.button`
   background: none;
   color: #fff;
   transition: color .2s;
-
+  margin-right: 20px;
   &:hover {
     color: #d0d7ff;
   }
